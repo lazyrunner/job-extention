@@ -22,7 +22,7 @@
           "matches": ["https://*.linkedin.com/jobs/*", "https://*.indeed.com/jobs*"],
           "run_at": "document_end",
           "css": ["my-styles.css"],
-          "js": ["content-script.js"]
+          "js": ["libs/jquery-3.6.0.min.js","content-script.js"]
         }
       ]
 }

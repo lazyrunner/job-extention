@@ -8,10 +8,13 @@ new MutationObserver(() => {
 }).observe(document, { subtree: true, childList: true });
 
 function onUrlChange() {
+    var box = document.getElementById("extention-big-box");
+    if (box) {
+        box.remove();
+    }
     getElement();
 }
 
-alert('Hello');
 var jobDescDiv;
 var btnChecks;
 
@@ -41,6 +44,7 @@ function checkLinkedBtnExists(id) {
     return document.getElementById(id);
 
 }
+
 function checkIndeedBtnExists(id) {
     var iframe = document.getElementById("vjs-container-iframe");
     var btn;
@@ -85,7 +89,10 @@ function createButton() {
         let btn = document.createElement("button");
         btn.id = 'genrateskillz';
         btn.innerHTML = "Genetate Skills";
+        btn.className = "artdeco-button artdeco-button--2 artdeco-button--secondary";
         btn.addEventListener("click", fetchSkills);
+        var mybr = document.createElement('br');
+        jobDescDiv.appendChild(mybr);
         jobDescDiv.appendChild(btn);
     }
 
@@ -97,11 +104,71 @@ function url_domain(data) {
     return a.hostname;
 }
 
-function fetchSkills(){
+function fetchSkills() {
     var siteName = window.location.href
     siteName = url_domain(siteName);
-    console.log(jobDescDiv.textContent)
+    var jobDesc = jobDescDiv.textContent;
+    console.log(jobDesc)
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8000/keywords/",
+        dataType: "json",
+        data: JSON.stringify({
+            site: siteName,
+            text: jobDesc
+        }),
+        success: function (data) {
+            console.log(data);
+            showSkills(data);
+        } //end function
+    }); //End ajax 
+}
+
+function showSkills(skills) {
+    let skillsHtml = '';
+    for (skill in skills) {
+        skillsHtml += `<button class = "extentions-skill" onclick="extentionAddSkill()"> ` + skills[skill] + ` </button> `
+    }
+    var div = document.createElement("div");
+    div.className = 'extentions-container';
+    div.id = "extention-big-box";
+    var toAddDiv = document.createElement("div");
+    toAddDiv.id = "extentionToAddItems";
+    for (skill in skills) {
+        let btn = document.createElement("button");
+        btn.innerHTML = skills[skill];
+        btn.className = "extentions-skill";
+        btn.addEventListener("click", extentionAddSkill);
+        toAddDiv.appendChild(btn);
+    }
+    div.appendChild(toAddDiv);
+    var selected = document.createElement("div");
+    selected.className = 'extentions-selected';
+    selected.innerHTML = 'Added Skills :'
+    div.appendChild(selected);
+    jobDescDiv.appendChild(div);
+}
+
+function extentionAddSkill() {
+    $(this).toggleClass("clicked");
+    $(this).remove();
+    let btn = document.createElement("button");
+    btn.innerHTML = $(this).text();
+    btn.className = "extentions-addded-skill";
+    btn.addEventListener("click", extentionRemovedSkill);
+    $('.extentions-selected').append(btn)
+}
+
+function extentionRemovedSkill() {
+    $(this).toggleClass("clicked");
+    $(this).remove();
+    let btn = document.createElement("button");
+    btn.innerHTML = $(this).text();
+    btn.className = "extentions-skill";
+    btn.addEventListener("click", extentionAddSkill);
+    let div = document.getElementById('extentionToAddItems');
+    div.appendChild(btn);
+
 }
 
 getElement();
-

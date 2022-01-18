@@ -1,0 +1,61 @@
+.extentions-container {
+    margin-top: 10px;
+    border: 1px solid black;
+    padding: 15px 31px;
+}
+
+.extentions-clicked {
+    opacity: 0;
+    transition: ease 0.6s;
+}
+
+.extentions-skill {
+    height: 32px;
+    border-radius: 16px;
+    background: #124e78;
+    color: white;
+    padding: 0px 16px;
+    margin-bottom: 8px;
+    min-width: 96px;
+    min-height: 32px;
+}
+
+.extentions-skill::before {
+    content: '+';
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.extentions-skill:hover {
+    background: #0e3d5e;
+    transition: ease 0.6s;
+}
+
+.extentions-task {
+    float: right;
+    min-width: 96px;
+    padding: 8px;
+    margin: 32px 0 0 16px
+}
+
+.extentions-addded-skill {
+    height: 32px;
+    border-radius: 16px;
+    background: #124e78;
+    color: white;
+    padding: 0px 16px;
+    margin-bottom: 8px;
+    min-width: 96px;
+    min-height: 32px;
+}
+
+.extentions-addded-skill::before {
+    content: '-';
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.extentions-addded-skill:hover {
+    background: #0e3d5e;
+    transition: ease 0.6s;
+}
