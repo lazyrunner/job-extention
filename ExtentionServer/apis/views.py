@@ -1,8 +1,12 @@
 from rest_framework.parsers import JSONParser
-from .serializers import InputText
+from .serializers import InputText, ResumeText
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .utils import findKeywords
+from .skillsutils import findKeywords
+from .resumeutils import writeToResume
+from django.http import FileResponse
+from pathlib import Path
+
 
 class KeywordView(APIView):
     def get(self, request):
@@ -18,5 +22,16 @@ class KeywordView(APIView):
             return Response(words)  
         return Response(serializer.errors, status=400)        
 
+class ResumeView(APIView):
+    def post(self, request):
+        data = JSONParser().parse(request)
+        serializer = ResumeText(data=data)
+        if serializer.is_valid():
+            writeToResume(data['skills'])
+            filename = 'destination.pdf'
+            pdf = Path('') / filename
+            response = FileResponse(open(pdf, "rb"), filename=filename)
+            return response
+        return Response(serializer.errors, status=400)        
 
 #source https://www.justintodata.com/use-nlp-in-python-practical-step-by-step-example/

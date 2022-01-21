@@ -7,11 +7,14 @@ new MutationObserver(() => {
     }
 }).observe(document, { subtree: true, childList: true });
 
+let skillToAdd = new Set();
+
 function onUrlChange() {
     var box = document.getElementById("extention-big-box");
     if (box) {
         box.remove();
     }
+    skillToAdd = new Set();
     getElement();
 }
 
@@ -85,7 +88,6 @@ function createButton() {
     var btId = 'genrateskillz';
     var doesBtnExist = btnChecks(btId);
     if (!doesBtnExist) {
-        alert('creating button');
         let btn = document.createElement("button");
         btn.id = 'genrateskillz';
         btn.innerHTML = "Genetate Skills";
@@ -124,6 +126,34 @@ function fetchSkills() {
     }); //End ajax 
 }
 
+function createResume() {
+    var siteName = window.location.href
+    siteName = url_domain(siteName);
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:8000/resume/",
+        // dataType: "json",
+        data: JSON.stringify({
+            site: siteName,
+            skills: Array.from(skillToAdd)
+        }),
+        xhrFields:{
+            responseType:'blob'
+        },
+        success: function (data) {
+            var filename = 'resume';
+            if (data.error === undefined) {
+                console.log(data) // This will be informative
+                var blob = new Blob([data]);
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = filename + '.pdf';
+                link.click();
+            }
+        } //end function
+    }); //End ajax 
+}
+
 function showSkills(skills) {
     let skillsHtml = '';
     for (skill in skills) {
@@ -146,6 +176,15 @@ function showSkills(skills) {
     selected.className = 'extentions-selected';
     selected.innerHTML = 'Added Skills :'
     div.appendChild(selected);
+
+    let btn = document.createElement("button");
+    btn.id = 'generteResume';
+    btn.innerHTML = "Genetate Resume";
+    btn.className = "artdeco-button artdeco-button--2 artdeco-button--secondary";
+    btn.addEventListener("click", createResume);
+    var mybr = document.createElement('br');
+    div.appendChild(mybr);
+    div.appendChild(btn);
     jobDescDiv.appendChild(div);
 }
 
@@ -157,6 +196,7 @@ function extentionAddSkill() {
     btn.className = "extentions-addded-skill";
     btn.addEventListener("click", extentionRemovedSkill);
     $('.extentions-selected').append(btn)
+    skillToAdd.add($(this).text());
 }
 
 function extentionRemovedSkill() {
@@ -168,7 +208,7 @@ function extentionRemovedSkill() {
     btn.addEventListener("click", extentionAddSkill);
     let div = document.getElementById('extentionToAddItems');
     div.appendChild(btn);
-
+    skillToAdd.delete($(this).text());
 }
 
 getElement();
