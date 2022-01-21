@@ -36,5 +36,5 @@ tokenizes it and matches it to existing skills. The UI then displays the matched
 - [x] Create Server
 - [x] Connect extention to server
 - [x] Display results
-- [ ] Organize results
-- [ ] Generate custom resume based on skills selected
+- [x] Organize results
+- [x] Generate custom resume based on skills selected
